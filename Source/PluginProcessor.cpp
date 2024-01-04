@@ -19,7 +19,7 @@ SimplegainAudioProcessor::SimplegainAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {
 }
@@ -188,4 +188,12 @@ void SimplegainAudioProcessor::setStateInformation (const void* data, int sizeIn
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new SimplegainAudioProcessor();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout SimplegainAudioProcessor::createParameters()
+{
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", "gain", 0.0f, 1.0f, 0.5f));
+    
+    return {parameters.begin(), parameters.end()};
 }
