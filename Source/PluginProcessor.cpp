@@ -150,11 +150,18 @@ void SimplegainAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    
+    float dbGain = *apvts.getRawParameterValue("GAIN");
+    float rawGain = juce::Decibels::decibelsToGain(dbGain);
+    juce::dsp::AudioBlock<float> block (buffer);
+    for (int channel = 0; channel < block.getNumChannels(); ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+        auto* channelData = block.getChannelPointer (channel);
 
-        // ..do something to the data...
+        for (int sample=0; sample < block.getNumSamples(); sample++)
+        {
+            channelData[sample] *= rawGain;
+        }
     }
 }
 
@@ -193,7 +200,7 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 juce::AudioProcessorValueTreeState::ParameterLayout SimplegainAudioProcessor::createParameters()
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", "gain", 0.0f, 1.0f, 0.5f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("GAIN", "gain", -24.0f, 24.0f, 0.0f));
     
     return {parameters.begin(), parameters.end()};
 }
