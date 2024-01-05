@@ -15,6 +15,9 @@ SimplegainAudioProcessorEditor::SimplegainAudioProcessorEditor (SimplegainAudioP
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
+    gainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
+    addAndMakeVisible(gainSlider);
     setSize (400, 300);
 }
 
@@ -37,4 +40,5 @@ void SimplegainAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    gainSlider.setBounds(getWidth() / 2 - 100, getHeight() / 2 - 50, 200, 100);
 }
