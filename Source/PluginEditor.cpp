@@ -18,6 +18,10 @@ SimplegainAudioProcessorEditor::SimplegainAudioProcessorEditor (SimplegainAudioP
     gainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 50);
     addAndMakeVisible(gainSlider);
+    
+    gainsliderAttachment = std::make_unique
+    <juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "GAIN", gainSlider);
+    
     setSize (400, 300);
 }
 
@@ -33,7 +37,6 @@ void SimplegainAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
 }
 
 void SimplegainAudioProcessorEditor::resized()
